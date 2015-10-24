@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
+[ExecuteInEditMode]
 [RequireComponent (typeof(MeshFilter))]
 [RequireComponent(typeof(MeshCollider))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -9,25 +9,72 @@ using System.Collections;
 
 public class TileMap : MonoBehaviour {
 
-
     public int size_x = 100; //Number of tiles in the x direction
     public int size_z = 100; //Number of tiles in the z direction
     public float tileSize = 1.0f;
+    public Texture2D terrainTiles;
+    public int tileResolution;
 
-	// Use this for initialization
-	void Start () {
 
+    // Use this for initialization
+    void Start () {
         BuildMesh();
-
+        //BuildTexture();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    Color[][] ChopUpTiles()
+    {
+        int numTilesPerRow = terrainTiles.width / tileResolution;
+        int numRows = terrainTiles.height / tileResolution;
+
+        Color[][] tiles = new Color[numTilesPerRow * numRows][];
+
+        for (int y =0; y <numRows; y++)
+        {
+            for (int x = 0; x <numTilesPerRow; x++)
+            {
+               tiles[y*numTilesPerRow + x] = terrainTiles.GetPixels(x* tileResolution, y*tileResolution, tileResolution, tileResolution);
+            }
+        }
+        //Color[] p = terrainTiles.GetPixels(terrainTileOffset, 0, tileResolution, tileResolution);
+        return tiles;
+    }
+
+    public void BuildTexture()
+    {
+        int tileResolution = terrainTiles.height;
+        int numTilesPerRow = terrainTiles.width / tileResolution;
+        int numRows = terrainTiles.height / tileResolution;
+
+        Color[][] tiles = ChopUpTiles();
+
+        int texWidth = size_x * tileResolution;
+        int texHeight = size_z * tileResolution;
+        Texture2D texture = new Texture2D(texWidth, texHeight);
 
 
-    void BuildMesh()
+        for (int y =0; y < size_z; y++)
+        {
+            for (int x = 0; x < size_x; x++)
+            {
+
+                Color[] p = tiles[Random.Range(0, 4)];
+                texture.SetPixels(x*tileResolution , y*tileResolution , tileResolution, tileResolution, p);
+            }
+        }
+
+
+        texture.filterMode= FilterMode.Point;
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.Apply();
+
+        MeshRenderer mesh_render = GetComponent<MeshRenderer>();
+        mesh_render.sharedMaterials[0].mainTexture = texture; 
+        Debug.Log("Texture done");
+    }
+
+
+    public void BuildMesh()
     {
         int num_Tiles = size_x * size_z;
         int numTriangles = num_Tiles * 2; 
@@ -50,7 +97,7 @@ public class TileMap : MonoBehaviour {
             {
                 vertices[z * vsize_x + x] = new Vector3(x*tileSize, 0, z*tileSize);
                 normals[z * vsize_x + x] = Vector3.up;
-                uv[z * vsize_x + x] = new Vector2( (float)x/vsize_x, (float)z/vsize_z );
+                uv[z * vsize_x + x] = new Vector2( (float)x/size_x, (float)z/size_z );
             }
         }
 
@@ -60,41 +107,16 @@ public class TileMap : MonoBehaviour {
             {
                 int squareIndex = z * size_x + x;
                 int triIndex = squareIndex * 6;
-                triangles[triIndex + 0] = 0;
-                triangles[triIndex + 1] = vsize_x + 1;
-                triangles[triIndex + 2] = vsize_x + 0;
+                triangles[triIndex + 0] = z * vsize_x + x + 0;
+                triangles[triIndex + 1] = z * vsize_x + x + vsize_x + 0;
+                triangles[triIndex + 2] = z * vsize_x + x + vsize_x + 1;
 
-                triangles[triIndex + 3] = 0;
-                triangles[triIndex + 4] = 1;
-                triangles[triIndex + 5] = vsize_x + 1;
+                triangles[triIndex + 3] = z * vsize_x + x + 0;
+                triangles[triIndex + 4] = z * vsize_x + x + vsize_x + 1;
+                triangles[triIndex + 5] = z * vsize_x + x + 1;
 
             }
         }
-
-        /*vertices[0] = new Vector3(0, 0, 0);
-        vertices[1] = new Vector3(1, 0, 0);
-        vertices[2] = new Vector3(0, 0, -1);
-        vertices[3] = new Vector3(1, 0, -1);
-
-        triangles[0] = 0;
-        triangles[1] = 3;
-        triangles[2] = 2;
-
-        triangles[3] = 0;
-        triangles[4] = 1;
-        triangles[5] = 3;
-
-        normals[0] = Vector3.up;
-        normals[1] = Vector3.up;
-        normals[2] = Vector3.up;
-        normals[3 ] = Vector3.up;
-
-        uv[0] = new Vector2(0,0);
-        uv[1] = new Vector2(1,0);
-        uv[2] = new Vector2(0,1);
-        uv[3] = new Vector2(1,1);*/
-
-
 
         //Create a new Mesh and populate with data
         Mesh mesh = new Mesh();
