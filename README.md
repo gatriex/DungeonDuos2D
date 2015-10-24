@@ -1,2 +1,2 @@
 # DungeonDuos2D
-Le Epic Memes xD !111!!!!!1!
+Dungeon Duos rebooted in 2D
