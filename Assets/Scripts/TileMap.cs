@@ -19,7 +19,7 @@ public class TileMap : MonoBehaviour {
     // Use this for initialization
     void Start () {
         BuildMesh();
-        //BuildTexture();
+        BuildTexture();
 	}
 	
     Color[][] ChopUpTiles()
@@ -42,23 +42,19 @@ public class TileMap : MonoBehaviour {
 
     public void BuildTexture()
     {
-        int tileResolution = terrainTiles.height;
-        int numTilesPerRow = terrainTiles.width / tileResolution;
-        int numRows = terrainTiles.height / tileResolution;
-
-        Color[][] tiles = ChopUpTiles();
-
+        DTileMap map = new DTileMap(size_x, size_z);
         int texWidth = size_x * tileResolution;
         int texHeight = size_z * tileResolution;
         Texture2D texture = new Texture2D(texWidth, texHeight);
 
+        Color[][] tiles = ChopUpTiles();
 
         for (int y =0; y < size_z; y++)
         {
             for (int x = 0; x < size_x; x++)
             {
 
-                Color[] p = tiles[Random.Range(0, 4)];
+                Color[] p = tiles[map.GetTyleAt(x,y)];
                 texture.SetPixels(x*tileResolution , y*tileResolution , tileResolution, tileResolution, p);
             }
         }
@@ -76,6 +72,7 @@ public class TileMap : MonoBehaviour {
 
     public void BuildMesh()
     {
+
         int num_Tiles = size_x * size_z;
         int numTriangles = num_Tiles * 2; 
         int vsize_x = size_x + 1;
@@ -95,9 +92,9 @@ public class TileMap : MonoBehaviour {
         {
             for (x = 0; x < size_x; x++)
             {
-                vertices[z * vsize_x + x] = new Vector3(x*tileSize, 0, z*tileSize);
+                vertices[z * vsize_x + x] = new Vector3(x*tileSize, 0, -z*tileSize);
                 normals[z * vsize_x + x] = Vector3.up;
-                uv[z * vsize_x + x] = new Vector2( (float)x/size_x, (float)z/size_z );
+                uv[z * vsize_x + x] = new Vector2( (float)x/size_x,1- (float)z/size_z );
             }
         }
 
@@ -108,12 +105,12 @@ public class TileMap : MonoBehaviour {
                 int squareIndex = z * size_x + x;
                 int triIndex = squareIndex * 6;
                 triangles[triIndex + 0] = z * vsize_x + x + 0;
-                triangles[triIndex + 1] = z * vsize_x + x + vsize_x + 0;
-                triangles[triIndex + 2] = z * vsize_x + x + vsize_x + 1;
+                triangles[triIndex + 2] = z * vsize_x + x + vsize_x + 0;
+                triangles[triIndex + 1] = z * vsize_x + x + vsize_x + 1;
 
                 triangles[triIndex + 3] = z * vsize_x + x + 0;
-                triangles[triIndex + 4] = z * vsize_x + x + vsize_x + 1;
-                triangles[triIndex + 5] = z * vsize_x + x + 1;
+                triangles[triIndex + 5] = z * vsize_x + x + vsize_x + 1;
+                triangles[triIndex + 4] = z * vsize_x + x + 1;
 
             }
         }
@@ -132,5 +129,7 @@ public class TileMap : MonoBehaviour {
 
         mesh_filter.mesh = mesh;
     }
+
+
 
 }

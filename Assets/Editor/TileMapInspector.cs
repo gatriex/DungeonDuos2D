@@ -14,7 +14,7 @@ public class TileMapInspector : Editor {
             TileMap tileMap = (TileMap)target;
             tileMap.BuildMesh();
             tileMap.BuildTexture();
+
         }
     }
-
 }
