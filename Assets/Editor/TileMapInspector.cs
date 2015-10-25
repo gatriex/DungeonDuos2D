@@ -12,9 +12,15 @@ public class TileMapInspector : Editor {
         if(GUILayout.Button("Regenerate"))
         {
             TileMap tileMap = (TileMap)target;
-            tileMap.BuildMesh();
-            tileMap.BuildTexture();
+            tileMap.GenerateMapVisuals();
 
         }
+        if (GUILayout.Button("Destroy"))
+        {
+            TileMap tileMap = (TileMap)target;
+            tileMap.DestroyMap();
+
+        }
+
     }
 }

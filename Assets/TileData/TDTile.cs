@@ -1,17 +1,26 @@
-﻿public class TDTile {
-    enum TYPE
+﻿using UnityEngine;
+using System.Collections;
+
+public enum TILE_TYPE 
+{
+    EMPTY,
+    WALL,
+    FLOOR,
+    DARK,
+}
+
+[System.Serializable]
+public class TDTile {
+   
+
+
+    public int type = (int)TILE_TYPE.EMPTY;
+    public GameObject prefab;
+    public bool isWalkable = true;
+
+
+    public TDTile(TILE_TYPE type)
     {
-        OCEAN,
-        GRASS,
-        PLAIN,
-        MOUNTAIN
-    };
-    public const int TILE_OCEAN = 1;
-    public const int TILE_GRASS = 0;
-    public const int TILE_PLAIN = 2;
-    public const int TILE_MOUNTAIN = 3;
-
-
-    public int type = TILE_OCEAN;
-
+        this.type = (int)type;
+    }
 }

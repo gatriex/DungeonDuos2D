@@ -8,19 +8,60 @@ using System.Collections;
 
 
 public class TileMap : MonoBehaviour {
-
-    public int size_x = 100; //Number of tiles in the x direction
-    public int size_z = 100; //Number of tiles in the z direction
+   
+    public int size_x = 16; //Number of tiles in the x direction
+    public int size_z = 16; //Number of tiles in the z direction
     public float tileSize = 1.0f;
     public Texture2D terrainTiles;
     public int tileResolution;
 
+    public TDTile[] tile_types;
+    [HideInInspector]
+    public int[,] tiles;
 
     // Use this for initialization
     void Start () {
-        BuildMesh();
-        BuildTexture();
-	}
+        DTileMap map = new DTileMap(size_x, size_z);
+        tiles = new int[size_x, size_z];
+
+        //Initialize the Tiles
+        for (int x =0; x < size_x; x++)
+        {
+            for (int z = 0; z < size_z; z++)
+            {
+                tiles[x, z] = map.map_data[x,z];
+                //Debug.Log(tiles[x, z]);
+            }
+        }
+
+        //tiles[0, 0] = 2;
+        GenerateMapVisuals();
+        //BuildMesh();
+        //BuildTexture();
+    }
+
+    public void DestroyMap()
+    {
+        foreach (Transform child in transform)
+        {
+            DestroyImmediate(child.gameObject);
+        }
+    }
+
+    public void GenerateMapVisuals()
+    {
+        for (int x = 0; x < size_x-1; x++)
+        {
+            for (int z = 0; z < size_z-1; z++)
+            {
+                TDTile tt = tile_types[tiles[x, z] ];
+                GameObject tile = Instantiate(tt.prefab, new Vector3(x, 0, z), Quaternion.identity ) as GameObject;
+                tile.transform.rotation = Quaternion.Euler(90, 0, 0);
+                tile.transform.parent = transform;
+                tile.name = "Tile ("+x+" , " + z +" )";
+            }
+        }
+    }
 	
     Color[][] ChopUpTiles()
     {
@@ -54,6 +95,7 @@ public class TileMap : MonoBehaviour {
             for (int x = 0; x < size_x; x++)
             {
 
+                //GameObject physical_tyle = Instantiate();
                 Color[] p = tiles[map.GetTyleAt(x,y)];
                 texture.SetPixels(x*tileResolution , y*tileResolution , tileResolution, tileResolution, p);
             }
@@ -68,8 +110,6 @@ public class TileMap : MonoBehaviour {
         mesh_render.sharedMaterials[0].mainTexture = texture; 
         Debug.Log("Texture done");
     }
-
-
     public void BuildMesh()
     {
 

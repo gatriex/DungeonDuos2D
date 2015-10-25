@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class DTileMap  {
@@ -28,8 +29,10 @@ public class DTileMap  {
 
     int size_x;
     int size_y;
-    int[,] map_data;
+    public int[,] map_data;
+    //TDTile[,] tile_data;
     List<DRoom> rooms;
+    
 
     public DTileMap(int size_x, int size_y)
     {
@@ -43,6 +46,9 @@ public class DTileMap  {
             for (int y = 0; y<size_y; y++)
             {
                 map_data[x, y] = 3;
+                //TDTile tile = new TDTile(TILE_TYPE.EMPTY);
+                //tile.prefab = Instantiate( ) ;
+                //tile_data[x, y] = tile;
             }
         }
 
