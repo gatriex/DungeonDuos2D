@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour {
+public class Enemy : MonoBehaviour {
 
     //HIDE IN INSPECTOR
     [HideInInspector]
@@ -16,7 +17,8 @@ public class Player : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        Element.addElement(_elementQueue, new ElementStandardControl(this));
+        Element.addElement(_elementQueue, new EnemyMovement(this));
+
     }
 
     // Update is called once per frame

@@ -27,6 +27,10 @@ public class BobMovement : Element {
             Element.addElement(steve._elementQueue, new SteveMovement(steve));
             finished = true;
         }
+        if (Input.GetButtonDown("Ability1")) {
+            Debug.Log("Ability1");
+            Element.addElement(steve._elementQueue, new ElementMoveOverTime(10, bob.transform.position, steve.transform.position, steve.gameObject, false));
+        }
     }
 
     public override void onRemove() {
