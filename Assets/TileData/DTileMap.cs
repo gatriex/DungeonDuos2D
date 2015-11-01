@@ -32,12 +32,20 @@ public class DTileMap  {
     public int[,] map_data;
     //TDTile[,] tile_data;
     List<DRoom> rooms;
-    
+    int num_rooms;
+    int room_size_x;
+    int room_size_y;
+    int x_range;
+    int y_range;
 
-    public DTileMap(int size_x, int size_y)
+    //Base Constructor 
+    public DTileMap(int size_x, int size_y, int numrooms, int roomsizex, int roomsizey , int x_range, int y_range)
     {
         this.size_x = size_x;
         this.size_y = size_y;
+        this.num_rooms = numrooms;
+        room_size_x = roomsizex;
+        room_size_y = roomsizey;
 
         map_data = new int[size_x, size_y];
 
@@ -54,9 +62,9 @@ public class DTileMap  {
 
         rooms = new List<DRoom>();
 
-        for (int i = 0; i < 15; i++) { 
-            int rsx = Random.Range(8, 12);
-            int rsy = Random.Range(8, 10);
+        for (int i = 0; i < num_rooms; i++) { 
+            int rsx = Random.Range(room_size_x - x_range, room_size_x + x_range);
+            int rsy = Random.Range(room_size_y - y_range, room_size_y + y_range);
             DRoom r = new DRoom();
             r.left = Random.Range(0,size_x - rsx);
             r.top = Random.Range(0, size_y - rsy);
@@ -69,7 +77,7 @@ public class DTileMap  {
                 MakeRoom(r);
             }
         }
-        MakeCorridor(rooms[0], rooms[1]);
+        if (rooms.Count > 1)  MakeCorridor(rooms[0], rooms[1]);
 
        
         for( int i =0; i <rooms.Count; i++)

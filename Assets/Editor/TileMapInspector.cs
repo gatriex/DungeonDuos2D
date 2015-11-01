@@ -9,10 +9,10 @@ public class TileMapInspector : Editor {
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        if(GUILayout.Button("Regenerate"))
+        if(GUILayout.Button("Generate"))
         {
             TileMap tileMap = (TileMap)target;
-            tileMap.GenerateMapVisuals();
+            tileMap.BuildMap();
 
         }
         if (GUILayout.Button("Destroy"))
