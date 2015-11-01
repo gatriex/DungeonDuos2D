@@ -7,7 +7,7 @@ public class BobMovement : Element {
     Bob bob;
     Steve steve;
     string horizontal;
-    string vertical;
+    string vertical;   
 
     public BobMovement(Bob bob) {
         this.bob = bob;

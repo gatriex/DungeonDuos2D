@@ -17,7 +17,7 @@ public class Sign : MonoBehaviour {
     public Bob bob;
 
     //PRIVATE
-
+    private bool read = false;
     // Use this for initialization
     void Start() {
         
@@ -33,7 +33,8 @@ public class Sign : MonoBehaviour {
     }
 
     void OnTriggerStay2D(Collider2D other) {
-       if (other.CompareTag("Player") && Input.GetKeyDown(KeyCode.L)) {
+       if (!read && other.CompareTag("Player") && Input.GetKeyDown(KeyCode.L)) {
+            read = true;
             Element.addElement(_elementQueue, new DialogueActivate(canvas));
             Element.addElement(_elementQueue, new DialogueText(messages, canvas));
             Element.addElement(_elementQueue, new DialogueDeactivate(canvas));
